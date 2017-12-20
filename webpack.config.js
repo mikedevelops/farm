@@ -10,14 +10,18 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.ts?$/,
+                test: /\.ts$/,
                 use: 'awesome-typescript-loader',
                 exclude: /node_modules/
+            },
+            {
+                test: /\.png$/,
+                use: 'file-loader'
             }
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js', '.png']
     },
     plugins: [
         new Html({
