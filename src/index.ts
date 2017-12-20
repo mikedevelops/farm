@@ -3,12 +3,23 @@ import assets from './services/assetCollection';
 import Tile from './resources/Tile';
 import TimeService from './services/TimeService';
 import TimeGUI from './gui/TimeGUI';
+import * as moment from 'moment';
+
+// Game constants
+const WIDTH = 512;
+const HEIGHT = 512;
+const DEFAULT_GAME_TIME_START = moment({ year: 1988, month: 9, date: 3 });
+const REAL_TIME_START =  moment();
+const GAME_TIME_MULTIPLIERS = {
+    // 1440 (24h) / 3 = 480x
+    default: 2880
+};
 
 // Setup application
 const root: HTMLElement = document.getElementById('root');
 const application: Application = new Application({
-    width: 512,
-    height: 512,
+    width: WIDTH,
+    height: HEIGHT,
     resolution: 1
 });
 
@@ -24,7 +35,11 @@ loader
     .load(setup);
 
 // Services
-const timeService = new TimeService();
+const timeService = new TimeService(
+    DEFAULT_GAME_TIME_START,
+    REAL_TIME_START,
+    GAME_TIME_MULTIPLIERS.default
+);
 
 // GUI
 const timeGUI = new TimeGUI(
@@ -47,16 +62,16 @@ function setup () {
 function update (
     dt: number
 ) {
-    requestAnimationFrame(update.bind(null, timeService.getDeltaTime));
-
     // Update internal time
-    timeService.update(Date.now());
+    timeService.update(moment());
 
     // Update services
     timeGUI.update();
 
     // Render
     application.renderer.render(application.stage);
+
+    requestAnimationFrame(update.bind(null, timeService.getDeltaTime()));
 }
 
 // Start!

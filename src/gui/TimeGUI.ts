@@ -1,5 +1,9 @@
 import { DisplayObject, Text } from 'pixi.js';
 import TimeService from '../services/TimeService';
+import * as pretty from 'pretty-ms';
+
+// @TODO
+// - GUI Time Slider
 
 export default class TimeGUI extends Text {
     constructor (
@@ -15,18 +19,23 @@ export default class TimeGUI extends Text {
         // Set position
         this.position.set(4, 2);
         // Set text
-        this.text = `${this.printDeltaTime()}\n${this.printGameTime()}`;
+        this.update();
     }
 
+    /**
+     * Update the GUI
+     */
     public update (): void {
-        this.text = `${this.printDeltaTime()}\n${this.printGameTime()}`;
+        this.text = this.printGameTime();
     }
 
-    private printDeltaTime (): string {
-        return `dt: ${this.timeService.getDeltaTime()}`;
-    }
-
+    /**
+     * Format time metrics
+     */
     private printGameTime (): string {
-        return `gt: ${this.timeService.getTime().toString()}`;
+        return `gt: ${this.timeService.getGameTime().format()}` + '\n' +
+            `rt: ${pretty(this.timeService.getRealElapsedTime())}` + '\n' +
+            `dt: ${this.timeService.getDeltaTime()}` + '\n' +
+            `multiplier: ${this.timeService.getMultiplier()}x`;
     }
 }

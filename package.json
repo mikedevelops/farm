@@ -12,7 +12,9 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^21.1.8",
+    "@types/moment": "^2.13.0",
     "@types/pixi.js": "^4.6.1",
+    "@types/pretty-ms": "^3.0.0",
     "@types/webpack": "^3.8.1",
     "awesome-typescript-loader": "^3.4.1",
     "file-loader": "^1.1.6",
@@ -26,7 +28,9 @@
     "webpack-dev-server": "^2.9.7"
   },
   "dependencies": {
-    "pixi.js": "^4.6.2"
+    "moment": "^2.20.1",
+    "pixi.js": "^4.6.2",
+    "pretty-ms": "^3.1.0"
   },
   "jest": {
     "transform": {
