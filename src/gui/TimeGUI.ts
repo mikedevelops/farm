@@ -14,12 +14,13 @@ export default class TimeGUI extends Text {
         super('', {
             fontFamily: 'courier',
             fontSize: 12,
-            fill: 0xffffff,
+            fill: 0x00ff00,
             align: 'left'
         });
 
         // Set position
         this.position.set(4, 2);
+
         // Set text
         this.update();
     }

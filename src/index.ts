@@ -1,20 +1,14 @@
 import { Application, loader, Sprite } from 'pixi.js';
-import assets from './services/assetCollection';
 import Tile from './resources/Tile';
 import TimeService from './services/TimeService';
 import TimeGUI from './gui/TimeGUI';
 import * as moment from 'moment';
 import FramesPerSecond from './services/FramesPerSecond';
-
-// Game constants
-const WIDTH = 512;
-const HEIGHT = 512;
-const DEFAULT_GAME_TIME_START = moment({ year: 1988, month: 9, date: 3 });
-const REAL_TIME_START =  moment();
-const GAME_TIME_MULTIPLIERS = {
-    // 1440 (24h) / 3 = 480x
-    default: 2880
-};
+import tileTextures from './assets/tileTextures';
+import TileFactory from './factories/TileFactory';
+import Map from './resources/Map';
+import { WIDTH, HEIGHT, DEFAULT_GAME_TIME_START, REAL_TIME_START, GAME_TIME_MULTIPLIERS, GAME_UNIT_SIZE } from './config';
+import { createGameUnitConverter } from './utils/gameUtilities';
 
 // Setup application
 const root: HTMLElement = document.getElementById('root');
@@ -32,8 +26,18 @@ application.renderer.autoResize = true;
 
 // Load our assets
 loader
-    .add(assets)
+    .add([
+        ...tileTextures
+    ])
     .load(setup);
+
+// Utilities
+const gameUnitConverter = createGameUnitConverter(GAME_UNIT_SIZE);
+
+// Factories
+const tileFactory = new TileFactory(
+    loader.resources
+);
 
 // Services
 const timeService = new TimeService(
@@ -42,6 +46,12 @@ const timeService = new TimeService(
     GAME_TIME_MULTIPLIERS.default
 );
 const fps = new FramesPerSecond();
+
+// Resources
+const map = new Map(
+    tileFactory,
+    gameUnitConverter
+);
 
 // GUI
 const timeGUI = new TimeGUI(
@@ -55,6 +65,9 @@ const timeGUI = new TimeGUI(
 function setup () {
     console.log('* SETUP');
 
+    map.spawn(4);
+
+    application.stage.addChild(map);
     application.stage.addChild(timeGUI);
 }
 
