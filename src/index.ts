@@ -5,10 +5,22 @@ import TimeGUI from './gui/TimeGUI';
 import * as moment from 'moment';
 import FramesPerSecond from './services/FramesPerSecond';
 import tileTextures from './assets/tileTextures';
+import cursorTextures from './assets/cursorTextures';
 import TileFactory from './factories/TileFactory';
 import Map from './resources/Map';
-import { WIDTH, HEIGHT, DEFAULT_GAME_TIME_START, REAL_TIME_START, GAME_TIME_MULTIPLIERS, GAME_UNIT_SIZE } from './config';
 import { createGameUnitConverter } from './utils/gameUtilities';
+import Level from './resources/Level';
+import CursorFactory from './factories/CursorFactory';
+
+import {
+    WIDTH,
+    HEIGHT,
+    DEFAULT_GAME_TIME_START,
+    REAL_TIME_START,
+    GAME_TIME_MULTIPLIERS,
+    GAME_UNIT_SIZE
+} from './config';
+import Cursor from './resources/Cursor';
 
 // Setup application
 const root: HTMLElement = document.getElementById('root');
@@ -27,7 +39,8 @@ application.renderer.autoResize = true;
 // Load our assets
 loader
     .add([
-        ...tileTextures
+        ...tileTextures,
+        ...cursorTextures
     ])
     .load(setup);
 
@@ -39,6 +52,10 @@ const tileFactory = new TileFactory(
     loader.resources
 );
 
+const cursorFactory = new CursorFactory(
+    loader.resources
+);
+
 // Services
 const timeService = new TimeService(
     DEFAULT_GAME_TIME_START,
@@ -47,7 +64,10 @@ const timeService = new TimeService(
 );
 const fps = new FramesPerSecond();
 
-// Resources
+const level = new Level(
+    application.renderer
+);
+
 const map = new Map(
     tileFactory,
     gameUnitConverter
@@ -63,11 +83,16 @@ const timeGUI = new TimeGUI(
  * Game setup
  */
 function setup () {
-    console.log('* SETUP');
+    // Register cursor
+    const cursor: Cursor = cursorFactory.create();
 
+    level.registerCursor(cursor);
+
+    // Create game map
     map.spawn(4);
 
     application.stage.addChild(map);
+    application.stage.addChild(cursor);
     application.stage.addChild(timeGUI);
 }
 

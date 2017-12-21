@@ -13,4 +13,4 @@ export const GAME_TIME_MULTIPLIERS = {
 };
 
 // Units
-export const GAME_UNIT_SIZE = 128;
+export const GAME_UNIT_SIZE = 64;

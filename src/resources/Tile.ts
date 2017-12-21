@@ -20,5 +20,8 @@ export default class Tile extends Sprite {
         // Set dimensions
         this.width = width;
         this.height = height;
+
+        // Interaction
+        this.interactive = true;
     }
 }
