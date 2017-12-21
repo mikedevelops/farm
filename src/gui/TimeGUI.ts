@@ -1,13 +1,15 @@
 import { DisplayObject, Text } from 'pixi.js';
 import TimeService from '../services/TimeService';
 import * as pretty from 'pretty-ms';
+import FramesPerSecond from '../services/FramesPerSecond';
 
 // @TODO
 // - GUI Time Slider
 
 export default class TimeGUI extends Text {
     constructor (
-        private timeService: TimeService
+        private timeService: TimeService,
+        private fps: FramesPerSecond
     ) {
         super('', {
             fontFamily: 'courier',
@@ -35,7 +37,7 @@ export default class TimeGUI extends Text {
     private printGameTime (): string {
         return `gt: ${this.timeService.getGameTime().format()}` + '\n' +
             `rt: ${pretty(this.timeService.getRealElapsedTime())}` + '\n' +
-            `dt: ${this.timeService.getDeltaTime()}` + '\n' +
+            `fps: ${this.fps.get()}` + '\n' +
             `multiplier: ${this.timeService.getMultiplier()}x`;
     }
 }

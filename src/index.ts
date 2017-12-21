@@ -4,6 +4,7 @@ import Tile from './resources/Tile';
 import TimeService from './services/TimeService';
 import TimeGUI from './gui/TimeGUI';
 import * as moment from 'moment';
+import FramesPerSecond from './services/FramesPerSecond';
 
 // Game constants
 const WIDTH = 512;
@@ -40,10 +41,12 @@ const timeService = new TimeService(
     REAL_TIME_START,
     GAME_TIME_MULTIPLIERS.default
 );
+const fps = new FramesPerSecond();
 
 // GUI
 const timeGUI = new TimeGUI(
-    timeService
+    timeService,
+    fps
 );
 
 /**
@@ -67,6 +70,7 @@ function update (
 
     // Update services
     timeGUI.update();
+    fps.update(performance.now());
 
     // Render
     application.renderer.render(application.stage);
