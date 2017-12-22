@@ -1,4 +1,4 @@
-export default class FramesPerSecond {
+export default class FramesPerSecondService {
     private lastFpsReading: number;
     private then: number;
     private fps: number;

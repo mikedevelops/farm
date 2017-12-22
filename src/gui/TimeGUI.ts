@@ -1,7 +1,7 @@
 import { DisplayObject, Text } from 'pixi.js';
 import TimeService from '../services/TimeService';
 import * as pretty from 'pretty-ms';
-import FramesPerSecond from '../services/FramesPerSecond';
+import FramesPerSecondService from '../services/FramesPerSecondService';
 
 // @TODO
 // - GUI Time Slider
@@ -9,7 +9,7 @@ import FramesPerSecond from '../services/FramesPerSecond';
 export default class TimeGUI extends Text {
     constructor (
         private timeService: TimeService,
-        private fps: FramesPerSecond
+        private fps: FramesPerSecondService
     ) {
         super('', {
             fontFamily: 'courier',

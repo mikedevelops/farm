@@ -29,12 +29,21 @@ export default class TimeService {
         // game time is not relative to FPS. We'll multiply the delta by our
         // game time mulltiplier at this point
         this.gameTime = this.gameTime.add(
-            this.dt * this.multiplier,
+            this.getGameDeltaTime(this.dt),
             'ms'
         );
         // update real time
         this.realTime = currentFrameRealTime;
         this.realElapsedTime += this.dt;
+    }
+
+    /**
+     * Convert delta time to in-game delta time
+     */
+    public getGameDeltaTime (
+        dt: number
+    ): number {
+        return dt * this.multiplier;
     }
 
     /**

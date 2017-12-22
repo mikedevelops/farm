@@ -1,10 +1,10 @@
-import FramesPerSecond from '../../src/services/FramesPerSecond';
+import FramesPerSecondService from '../../src/services/FramesPerSecondService';
 
-describe('FramesPerSecond', () => {
-    let fps: FramesPerSecond;
+describe('FramesPerSecondService', () => {
+    let fps: FramesPerSecondService;
 
     beforeEach(() => {
-        fps = new FramesPerSecond();
+        fps = new FramesPerSecondService();
     });
 
     describe('update', () => {

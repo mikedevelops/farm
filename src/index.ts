@@ -3,7 +3,7 @@ import Tile from './resources/Tile';
 import TimeService from './services/TimeService';
 import TimeGUI from './gui/TimeGUI';
 import * as moment from 'moment';
-import FramesPerSecond from './services/FramesPerSecond';
+import FramesPerSecond from './services/FramesPerSecondService';
 import tileTextures from './assets/tileTextures';
 import cursorTextures from './assets/cursorTextures';
 import TileFactory from './factories/TileFactory';
@@ -21,6 +21,7 @@ import {
     GAME_UNIT_SIZE
 } from './config';
 import Cursor from './resources/Cursor';
+import Spawner from './services/SpawnerService';
 
 // Setup application
 const root: HTMLElement = document.getElementById('root');
@@ -62,10 +63,17 @@ const timeService = new TimeService(
     REAL_TIME_START,
     GAME_TIME_MULTIPLIERS.default
 );
+
+const spawner = new Spawner(
+    timeService,
+    tileFactory
+);
+
 const fps = new FramesPerSecond();
 
 const level = new Level(
-    application.renderer
+    application.renderer,
+    spawner
 );
 
 const map = new Map(
@@ -83,10 +91,16 @@ const timeGUI = new TimeGUI(
  * Game setup
  */
 function setup () {
+    // @TODO
+    // - should the level act as a container :thinking:
+
     // Register cursor
     const cursor: Cursor = cursorFactory.create();
 
     level.registerCursor(cursor);
+
+    // Register map
+    level.registerMap(map);
 
     // Create game map
     map.spawn(4);
@@ -109,10 +123,10 @@ function update (
     // Update services
     timeGUI.update();
     fps.update(performance.now());
+    map.update(timeService.getGameDeltaTime(dt));
 
     // Render
     application.renderer.render(application.stage);
-
     requestAnimationFrame(update.bind(null, timeService.getDeltaTime()));
 }
 

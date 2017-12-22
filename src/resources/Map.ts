@@ -1,5 +1,6 @@
 import { Container } from 'pixi.js';
 import TileFactory from '../factories/TileFactory';
+import Tile from './Tile';
 
 export default class Map extends Container {
     constructor (
@@ -7,6 +8,8 @@ export default class Map extends Container {
         private gameUnit: gameUnit
     ) {
         super();
+
+        this.interactive = true;
     }
 
     /**
@@ -27,5 +30,14 @@ export default class Map extends Container {
                 );
             }
         }
+    }
+
+    /**
+     * Update map tiles
+     */
+    public update (
+        dt: number
+    ): void {
+        this.children.forEach((t: Tile) => t.update(dt));
     }
 }

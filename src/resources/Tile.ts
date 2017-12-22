@@ -1,8 +1,11 @@
 import { Sprite, Texture, loaders } from 'pixi.js';
 import { GAME_UNIT_SIZE } from '../config';
+import { Moment } from 'moment';
+import * as pretty from 'pretty-ms';
+import DebugTextService from '../services/DebugTextService';
 
 // TODO
-// 1. Make Tile seletable
+// - Add debug age Text to each tile
 
 export default class Tile extends Sprite {
     constructor (
@@ -10,7 +13,10 @@ export default class Tile extends Sprite {
         y: number,
         width: number,
         height: number,
-        texture: Texture
+        texture: Texture,
+        private debugTextService: DebugTextService,
+        private debug: boolean,
+        private age: number = 0
     ) {
         super(texture);
 
@@ -23,5 +29,23 @@ export default class Tile extends Sprite {
 
         // Interaction
         this.interactive = true;
+
+        // ! Debug time
+        if (this.debug) {
+            this.debugTextService.update(pretty(this.age, { compact: true }));
+            this.addChild(this.debugTextService);
+        }
+    }
+
+    public update (
+        dt: number
+    ): void {
+        // Update age
+        this.age += dt;
+
+        // ! Debug
+        if (this.debug) {
+            this.debugTextService.update(pretty(this.age, { compact: true }));
+        }
     }
 }
