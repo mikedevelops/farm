@@ -1,33 +1,25 @@
 import { Application, loader, Sprite } from 'pixi.js';
 import Tile from './resources/Tile';
 import TimeService from './services/TimeService';
-import TimeGUI from './gui/TimeGUI';
+import DebugGUI from './gui/DebugGUI';
 import * as moment from 'moment';
 import FramesPerSecond from './services/FramesPerSecondService';
 import tileTextures from './assets/tileTextures';
 import cursorTextures from './assets/cursorTextures';
 import TileFactory from './factories/TileFactory';
 import Map from './resources/Map';
-import { createGameUnitConverter } from './utils/gameUtilities';
 import Level from './resources/Level';
 import CursorFactory from './factories/CursorFactory';
-
-import {
-    WIDTH,
-    HEIGHT,
-    DEFAULT_GAME_TIME_START,
-    REAL_TIME_START,
-    GAME_TIME_MULTIPLIERS,
-    GAME_UNIT_SIZE
-} from './config';
+import * as config from './config';
 import Cursor from './resources/Cursor';
 import Spawner from './services/SpawnerService';
+import Utilities from './utils/Utilities';
 
 // Setup application
 const root: HTMLElement = document.getElementById('root');
 const application: Application = new Application({
-    width: WIDTH,
-    height: HEIGHT,
+    width: config.WIDTH,
+    height: config.HEIGHT,
     resolution: 1
 });
 
@@ -46,11 +38,19 @@ loader
     .load(setup);
 
 // Utilities
-const gameUnitConverter = createGameUnitConverter(GAME_UNIT_SIZE);
+const utilities = new Utilities(config);
+
+const timeService = new TimeService(
+    config.DEFAULT_GAME_TIME_START,
+    config.REAL_TIME_START,
+    config.GAME_TIME_MULTIPLIERS.default
+);
 
 // Factories
 const tileFactory = new TileFactory(
-    loader.resources
+    loader.resources,
+    utilities,
+    timeService
 );
 
 const cursorFactory = new CursorFactory(
@@ -58,12 +58,6 @@ const cursorFactory = new CursorFactory(
 );
 
 // Services
-const timeService = new TimeService(
-    DEFAULT_GAME_TIME_START,
-    REAL_TIME_START,
-    GAME_TIME_MULTIPLIERS.default
-);
-
 const spawner = new Spawner(
     timeService,
     tileFactory
@@ -78,13 +72,14 @@ const level = new Level(
 
 const map = new Map(
     tileFactory,
-    gameUnitConverter
+    utilities
 );
 
 // GUI
-const timeGUI = new TimeGUI(
+const debugGUI = new DebugGUI(
     timeService,
-    fps
+    fps,
+    map
 );
 
 /**
@@ -103,11 +98,11 @@ function setup () {
     level.registerMap(map);
 
     // Create game map
-    map.spawn(4);
+    map.spawn(config.MAP_SIZE);
 
     application.stage.addChild(map);
     application.stage.addChild(cursor);
-    application.stage.addChild(timeGUI);
+    application.stage.addChild(debugGUI);
 }
 
 /**
@@ -121,7 +116,7 @@ function update (
     timeService.update(moment());
 
     // Update services
-    timeGUI.update();
+    debugGUI.update();
     fps.update(performance.now());
     map.update(timeService.getGameDeltaTime(dt));
 

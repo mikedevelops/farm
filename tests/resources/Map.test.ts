@@ -2,18 +2,19 @@ import Map from '../../src/resources/Map';
 import TileFactory from '../../src/factories/TileFactory';
 import createMockInstance from 'jest-create-mock-instance';
 import { Container, DisplayObject } from 'pixi.js';
+import Utilities from '../../src/utils/Utilities';
 
 describe('map', () => {
     let map: Map;
     let tileFactoryMock: jest.Mocked<TileFactory>;
-    let gameUnit: jest.Mock;
+    let utilities: jest.Mocked<Utilities>;
 
     beforeEach(() => {
         tileFactoryMock = createMockInstance(TileFactory);
-        gameUnit = jest.fn();
+        utilities = createMockInstance(Utilities);
         map = new Map(
             tileFactoryMock,
-            gameUnit
+            utilities
         );
 
         // Return a standard DisplayObject for testing

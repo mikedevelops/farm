@@ -3,20 +3,24 @@ import { GAME_UNIT_SIZE } from '../config';
 import { Moment } from 'moment';
 import * as pretty from 'pretty-ms';
 import DebugTextService from '../services/DebugTextService';
-
-// TODO
-// - Add debug age Text to each tile
+import Utilities from '../utils/Utilities';
+import TileConfig from '../interfaces/TileConfig';
 
 export default class Tile extends Sprite {
+    protected age: Moment;
+
     constructor (
+        private type: string,
+        private config: TileConfig,
         x: number,
         y: number,
         width: number,
         height: number,
         texture: Texture,
+        private utilities: Utilities,
         private debugTextService: DebugTextService,
         private debug: boolean,
-        private age: number = 0
+        protected born: Moment
     ) {
         super(texture);
 
@@ -30,10 +34,13 @@ export default class Tile extends Sprite {
         // Interaction
         this.interactive = true;
 
+        // Set DOB
+        this.age = born;
+
         // ! Debug time
         if (this.debug) {
-            this.debugTextService.update(pretty(this.age, { compact: true }));
             this.addChild(this.debugTextService);
+            this.printDebugInformation();
         }
     }
 
@@ -41,11 +48,31 @@ export default class Tile extends Sprite {
         dt: number
     ): void {
         // Update age
-        this.age += dt;
+        this.age = this.age.clone().add(dt, 'ms');
 
         // ! Debug
         if (this.debug) {
-            this.debugTextService.update(pretty(this.age, { compact: true }));
+            this.printDebugInformation();
         }
+    }
+
+    /**
+     * Get age as milliseconds
+     */
+    public getAge (): number {
+        return this.age.valueOf() - this.born.valueOf();
+    }
+
+    /**
+     * Print debug information
+     */
+    public printDebugInformation (
+        debugInformation: string = ''
+    ): void {
+        const debug: string = this.type + '\n' +
+            'a: ' + pretty(this.getAge(), { compact: true }) + '\n' +
+            debugInformation;
+
+        this.debugTextService.update(debug);
     }
 }

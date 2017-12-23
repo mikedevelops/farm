@@ -1,11 +1,12 @@
 import { Container } from 'pixi.js';
 import TileFactory from '../factories/TileFactory';
 import Tile from './Tile';
+import Utilities from '../utils/Utilities';
 
 export default class Map extends Container {
     constructor (
         private tileFactory: TileFactory,
-        private gameUnit: gameUnit
+        private utilities: Utilities
     ) {
         super();
 
@@ -24,8 +25,8 @@ export default class Map extends Container {
             for (let c = 0; c < columns; c++) {
                 this.addChild(
                     this.tileFactory.create(
-                        this.gameUnit(r),
-                        this.gameUnit(c)
+                        this.utilities.getGameUnits(r),
+                        this.utilities.getGameUnits(c)
                     )
                 );
             }
