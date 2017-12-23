@@ -41,4 +41,14 @@ export default class Map extends Container {
     ): void {
         this.children.forEach((t: Tile) => t.update(dt));
     }
+
+    /**
+     * Align to center of stage
+     */
+    public align () {
+        const { width, height } = this.utilities.getStageDimensions();
+
+        this.x = (width / 2) - (this.width / 2);
+        this.y = (height / 2) - (this.height / 2);
+    }
 }

@@ -1,8 +1,8 @@
 import * as moment from 'moment';
 
-// Dimensions
-export const WIDTH = 512;
-export const HEIGHT = 512;
+// Dimensions (adjust to be a mutliple of 8)
+export const WIDTH = window.innerWidth - (window.innerWidth % 8);
+export const HEIGHT = window.innerHeight - (window.innerHeight % 8);
 
 // Time
 export const DEFAULT_GAME_TIME_START = moment({ year: 1988, month: 9, date: 3 });

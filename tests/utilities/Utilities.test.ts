@@ -3,7 +3,9 @@ import Utilities from '../../src/utils/Utilities';
 describe('Utilities', () => {
     let utilities: Utilities;
     const config = {
-        GAME_UNIT_SIZE: 10
+        GAME_UNIT_SIZE: 10,
+        WIDTH: 10,
+        HEIGHT: 10
     };
 
     beforeEach(() => {
@@ -24,6 +26,15 @@ describe('Utilities', () => {
 
             expect(random).toBeGreaterThanOrEqual(min);
             expect(random).toBeLessThanOrEqual(max);
+        });
+    });
+
+    describe('getStageDimensions', () => {
+        it('should return the stage dimensions', () => {
+            expect(utilities.getStageDimensions()).toEqual({
+                width: 10,
+                height: 10
+            });
         });
     });
 });

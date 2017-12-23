@@ -1,10 +1,10 @@
 import { interaction, WebGLRenderer, CanvasRenderer, DisplayObject } from 'pixi.js';
-import Tile from './Tile';
-import Cursor from './Cursor';
+import Tile from '../resources/Tile';
+import Cursor from '../resources/Cursor';
 import Spawner from '../services/SpawnerService';
-import Map from './Map';
+import Map from '../resources/Map';
 
-export default class Level extends interaction.InteractionManager {
+export default class GameInteractionManager extends interaction.InteractionManager {
     private map: Map;
     private gameCursor: Cursor;
     private activeTile: Tile;
@@ -52,8 +52,8 @@ export default class Level extends interaction.InteractionManager {
 
             // Position the cursor over the tile
             this.gameCursor.updatePosition(
-                this.activeTile.x,
-                this.activeTile.y
+                this.activeTile.worldTransform.tx,
+                this.activeTile.worldTransform.ty
             );
         } else {
             this.activeTile = null;

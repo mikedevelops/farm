@@ -21,4 +21,14 @@ export default class Utilities {
     ): number {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+
+    /**
+     * Get game stage dimensions
+     */
+    public getStageDimensions (): { width: number, height: number } {
+        return {
+            width: this.config.WIDTH,
+            height: this.config.HEIGHT
+        };
+    }
 }

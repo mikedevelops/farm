@@ -8,7 +8,7 @@ import tileTextures from './assets/tileTextures';
 import cursorTextures from './assets/cursorTextures';
 import TileFactory from './factories/TileFactory';
 import Map from './resources/Map';
-import Level from './resources/Level';
+import GameInteractionManager from './managers/GameInteractionManager';
 import CursorFactory from './factories/CursorFactory';
 import * as config from './config';
 import Cursor from './resources/Cursor';
@@ -65,14 +65,15 @@ const spawner = new Spawner(
 
 const fps = new FramesPerSecond();
 
-const level = new Level(
-    application.renderer,
-    spawner
-);
-
 const map = new Map(
     tileFactory,
     utilities
+);
+
+// Managers
+const gameInteractioManager = new GameInteractionManager(
+    application.renderer,
+    spawner
 );
 
 // GUI
@@ -92,13 +93,14 @@ function setup () {
     // Register cursor
     const cursor: Cursor = cursorFactory.create();
 
-    level.registerCursor(cursor);
+    gameInteractioManager.registerCursor(cursor);
 
     // Register map
-    level.registerMap(map);
+    gameInteractioManager.registerMap(map);
 
     // Create game map
     map.spawn(config.MAP_SIZE);
+    map.align();
 
     application.stage.addChild(map);
     application.stage.addChild(cursor);
